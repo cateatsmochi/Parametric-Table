@@ -24,11 +24,11 @@ export const DEFAULT_CONFIG: TableConfig = {
   legTaper: 5,
   topThickness: 25,
   frameDepth: 40,
-  frameInwardOffset: 20,
-  frameThickness: 40,
+  frameInwardOffset: 100,
+  frameThickness: 100, // Validated: >= legTopSize
   legTopSize: 80,
   legBottomSize: 40,
-  legInnerDepth: 60,
-  material: 'oak',
-  color: '#8B5E3C'
+  legInnerDepth: 20, // Validated: (thickness + innerDepth) > legTopSize + 5
+  material: 'glass',
+  color: '#ffffff'
 };

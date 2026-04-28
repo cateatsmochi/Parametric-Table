@@ -28,7 +28,17 @@ const MATERIAL_COLORS: Record<MaterialType, string> = {
 };
 
 export default function App() {
-  const [config, setConfig] = useState<TableConfig>(DEFAULT_CONFIG);
+  const [config, setConfig] = useState<TableConfig>(() => {
+    // Basic validation helper for initialization
+    const cfg = DEFAULT_CONFIG;
+    const minSum = cfg.legTopSize + 5;
+    let validated = { ...cfg };
+    if (validated.frameThickness < validated.legTopSize) validated.frameThickness = validated.legTopSize;
+    if (validated.legInnerDepth + validated.frameThickness < minSum) {
+      validated.frameThickness = Math.max(validated.frameThickness, minSum - validated.legInnerDepth);
+    }
+    return validated;
+  });
   const [chatInput, setChatInput] = useState('');
   const [messages, setMessages] = useState<{ role: 'user' | 'ai'; text: string; time: string }[]>([
     { role: 'ai', text: 'Hello. How can I optimize your table configuration today?', time: '09:41' }
@@ -437,7 +447,7 @@ export default function App() {
               <Download size={14} /> RENDER_EXPORT
             </button>
             <button 
-              onClick={() => setConfig(DEFAULT_CONFIG)}
+              onClick={() => setConfig(validateConfig(DEFAULT_CONFIG))}
               className="w-full bg-[#e8e8e8] py-3 font-bold text-xs uppercase tracking-widest hover:bg-gray-200 shadow-[inset_1px_1px_0px_0px_#ffffff,inset_-1px_-1px_0px_0px_#808080] active:translate-x-[1px] active:translate-y-[1px] flex items-center justify-center gap-2"
             >
               <RefreshCcw size={14} /> RESET_DEFAULTS
