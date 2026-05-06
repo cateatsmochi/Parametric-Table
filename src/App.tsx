@@ -194,8 +194,8 @@ export default function App() {
         const deltaX = e.clientX - resizeStartPos.current.x;
         const deltaY = e.clientY - resizeStartPos.current.y;
         setChatSize({
-          width: Math.max(240, resizeStartSize.current.width + deltaX),
-          height: Math.max(200, resizeStartSize.current.height + deltaY)
+          width: Math.max(260, resizeStartSize.current.width + deltaX),
+          height: Math.max(220, resizeStartSize.current.height + deltaY)
         });
       }
     };
@@ -392,18 +392,18 @@ export default function App() {
                     <div ref={chatEndRef} />
                   </div>
                 </div>
-                <form onSubmit={handleChatSubmit} className="p-2 flex gap-1 shrink-0">
+                <form onSubmit={handleChatSubmit} className="p-2 flex gap-1 shrink-0 w-full">
                   <input 
                     type="text" 
                     value={chatInput}
                     onChange={(e) => setChatInput(e.target.value)}
                     placeholder="TYPE COMMAND..."
-                    className="flex-1 bg-white border-none text-[10px] uppercase font-mono px-2 py-1 focus:ring-0 shadow-[inset_-1px_-1px_0px_0px_#ffffff,inset_1px_1px_0px_0px_#808080]"
+                    className="flex-1 min-w-0 bg-white border-none text-[10px] uppercase font-mono px-2 py-1 focus:ring-0 shadow-[inset_-1px_-1px_0px_0px_#ffffff,inset_1px_1px_0px_0px_#808080]"
                   />
                   <button 
                     type="submit"
                     disabled={isProcessing}
-                    className="bg-[#000000] text-[#ffffff] force-white-text px-3 py-1 font-bold text-[10px] hover:bg-gray-800 disabled:opacity-50"
+                    className="bg-[#000000] text-[#ffffff] force-white-text px-3 py-1 font-bold text-[10px] hover:bg-gray-800 disabled:opacity-50 shrink-0"
                   >
                     EXEC
                   </button>
