@@ -2,12 +2,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700;900&display=swap');
 
 :root {
-  color-scheme: light;
+  color-scheme: light !important;
 }
 
-body {
-  background-color: #f9f9f9;
-  color: #000000;
+html, body {
+  background-color: #f9f9f9 !important;
+  color: #000000 !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Force light mode colors for text that MUST be white on black background */
+.force-white-text {
+  color: #ffffff !important;
+}
+
+.force-black-text {
+  color: #000000 !important;
 }
 
 @theme {

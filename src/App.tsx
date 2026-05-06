@@ -229,8 +229,8 @@ export default function App() {
                 isMobile ? "max-w-md scale-[0.85]" : "max-w-2xl"
               )}
             >
-              <div className="bg-[#000000] text-[#ffffff] px-4 py-1 md:py-2 flex justify-between items-center h-8 md:h-10 shrink-0">
-                <span className="text-[9px] md:text-xs font-bold tracking-[0.2em] uppercase font-mono">ORDER_CONFIRM_V1.0</span>
+              <div className="bg-[#000000] text-[#ffffff] force-white-text px-4 py-1 md:py-2 flex justify-between items-center h-8 md:h-10 shrink-0">
+                <span className="text-[9px] md:text-xs font-bold tracking-[0.2em] uppercase font-mono force-white-text">ORDER_CONFIRM_V1.0</span>
                 <button 
                   onClick={() => setQuoteResult(null)}
                   className="bg-[#c6c6c6] text-[#000000] h-5 w-5 md:h-6 md:w-6 flex items-center justify-center shadow-[inset_1px_1px_0px_0px_#ffffff,inset_-1px_-1px_0px_0px_#808080] hover:bg-red-500 hover:text-white"
@@ -271,7 +271,7 @@ export default function App() {
                         link.href = quoteResult.image;
                         link.click();
                       }}
-                      className="flex-1 bg-[#000000] text-[#ffffff] py-1.5 md:py-3 font-bold text-[9px] uppercase tracking-wider hover:bg-gray-800"
+                      className="flex-1 bg-[#000000] text-[#ffffff] force-white-text py-1.5 md:py-3 font-bold text-[9px] uppercase tracking-wider hover:bg-gray-800"
                     >
                       Export
                     </button>
@@ -293,7 +293,7 @@ export default function App() {
       {/* Top Bar */}
       <header className="h-8 md:h-10 border-b-2 border-white shadow-[inset_-1px_-1px_0px_0px_#808080] flex justify-between items-center px-2 z-50 bg-[#f9f9f9] text-[#000000]">
         <div className="flex items-center gap-4">
-          <span className={cn("font-black tracking-tighter uppercase", isMobile ? "text-[10px]" : "text-lg")}>TABLE_CONFIG.EXE</span>
+          <span className={cn("font-black tracking-tighter uppercase text-[#000000] force-black-text", isMobile ? "text-[10px]" : "text-lg")}>TABLE_CONFIG.EXE</span>
           <nav className="hidden md:flex gap-4 ml-6 text-xs font-bold uppercase tracking-tighter">
             <button className="underline hover:bg-black hover:text-white px-2 py-0.5">File</button>
             <button className="text-gray-500 hover:bg-black hover:text-white px-2 py-0.5">Edit</button>
@@ -353,10 +353,10 @@ export default function App() {
           >
             <div 
               onMouseDown={onChatMouseDown}
-              className="bg-[#000000] text-[#ffffff] px-2 py-1 flex justify-between items-center h-7 cursor-move shrink-0"
+              className="bg-[#000000] text-[#ffffff] force-white-text px-2 py-1 flex justify-between items-center h-7 cursor-move shrink-0"
             >
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-bold tracking-widest uppercase font-mono">AI_SYSTEM.EXE</span>
+                <span className="text-[10px] font-bold tracking-widest uppercase font-mono force-white-text">AI_SYSTEM.EXE</span>
               </div>
               <div className="flex gap-1">
                 <button 
@@ -378,7 +378,7 @@ export default function App() {
                         </span>
                         <p className={cn(
                           "p-2 max-w-[90%]",
-                          msg.role === 'user' ? "bg-[#000000] text-[#ffffff]" : "text-[#000000] font-medium"
+                          msg.role === 'user' ? "bg-[#000000] text-[#ffffff] force-white-text" : "text-[#000000] font-medium force-black-text"
                         )}>
                           {msg.text}
                         </p>
@@ -403,7 +403,7 @@ export default function App() {
                   <button 
                     type="submit"
                     disabled={isProcessing}
-                    className="bg-[#000000] text-[#ffffff] px-3 py-1 font-bold text-[10px] hover:bg-gray-800 disabled:opacity-50"
+                    className="bg-[#000000] text-[#ffffff] force-white-text px-3 py-1 font-bold text-[10px] hover:bg-gray-800 disabled:opacity-50"
                   >
                     EXEC
                   </button>
@@ -442,7 +442,7 @@ export default function App() {
           isMobile ? "w-48 p-2 gap-3" : "w-72 p-4 gap-6"
         )}>
           <div>
-            <h2 className={cn("font-black tracking-tighter mb-1 uppercase", isMobile ? "text-sm" : "text-lg")}>Inspector</h2>
+            <h2 className={cn("font-black tracking-tighter mb-1 uppercase text-[#000000] force-black-text", isMobile ? "text-sm" : "text-lg")}>Inspector</h2>
             <div className="h-0.5 bg-black w-full"></div>
           </div>
 
@@ -603,7 +603,7 @@ export default function App() {
                   onClick={handleGenerateAndQuote}
                   title="Generate and Quote"
                   className={cn(
-                    "bg-[#000000] text-[#ffffff] font-bold uppercase tracking-widest hover:bg-gray-800 active:translate-x-[1px] active:translate-y-[1px] flex items-center justify-center transition-all",
+                    "bg-[#000000] text-[#ffffff] force-white-text font-bold uppercase tracking-widest hover:bg-gray-800 active:translate-x-[1px] active:translate-y-[1px] flex items-center justify-center transition-all",
                     isMobile ? "w-7 h-7 grow-0" : "w-full py-3 text-xs gap-2"
                   )}
                 >
@@ -641,7 +641,7 @@ export default function App() {
           <div className="px-4 border-l border-gray-400 flex items-center">X: {config.width.toFixed(2)}</div>
           <div className="px-4 border-l border-gray-400 flex items-center">Y: {config.depth.toFixed(2)}</div>
           <div className="px-4 border-l border-gray-400 flex items-center">Z: {config.height.toFixed(2)}</div>
-          <div className="px-4 border-l border-gray-400 bg-[#000000] text-[#ffffff] flex items-center">USER_ADMIN</div>
+          <div className="px-4 border-l border-gray-400 bg-[#000000] text-[#ffffff] force-white-text flex items-center">USER_ADMIN</div>
         </div>
       </footer>
     </div>
