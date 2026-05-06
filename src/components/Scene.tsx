@@ -22,21 +22,29 @@ export const Scene = forwardRef<SceneHandle, SceneProps>(({ config }, ref) => {
       if (contextRef.current) {
         const { gl, scene, camera } = contextRef.current;
         
-        // 1. Zoom in: move camera closer to the table
+        // 1. Zoom in: move camera to a professional distance
         const originalPos = camera.position.clone();
-        camera.position.multiplyScalar(0.7);
-        camera.lookAt(0, 0.5, 0);
+        const pCam = camera as THREE.PerspectiveCamera;
+        const originalFov = pCam.fov;
+        
+        // Use a narrower FOV (telephoto) to avoid wide-angle distortion
+        pCam.fov = 28;
+        pCam.updateProjectionMatrix();
+        camera.position.set(2.6, 2.0, 2.6); 
+        camera.lookAt(0, 0.45, 0);
 
         // 2. Hide GridLine (Grid helper)
         const grid = scene.getObjectByName('main-grid');
         const originalGridVisible = grid ? grid.visible : true;
         if (grid) grid.visible = false;
 
-        // Force a render to ensure the buffer is up to date for the capture
+        // Force a render
         gl.render(scene, camera);
         const data = gl.domElement.toDataURL('image/png');
 
         // 3. Restore
+        pCam.fov = originalFov;
+        pCam.updateProjectionMatrix();
         camera.position.copy(originalPos);
         camera.lookAt(0, 0.5, 0);
         if (grid) grid.visible = originalGridVisible;

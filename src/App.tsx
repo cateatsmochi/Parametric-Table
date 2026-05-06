@@ -239,7 +239,7 @@ export default function App() {
                 </button>
               </div>
               <div className={cn("flex gap-4 md:gap-6", isMobile ? "p-3 pb-4 flex-row" : "p-6 flex-col md:flex-row")}>
-                <div className={cn("bg-white shadow-[inset_-1px_-1px_0px_0px_#ffffff,inset_1px_1px_0px_0px_#808080] p-1", isMobile ? "w-1/3 aspect-square" : "flex-1 aspect-square")}>
+                <div className={cn("bg-white shadow-[inset_-1px_-1px_0px_0px_#ffffff,inset_1px_1px_0px_0px_#808080] p-1", isMobile ? "w-1/2 aspect-square" : "flex-1 aspect-square")}>
                   <img src={quoteResult.image} alt="Table Config" className="w-full h-full object-contain" />
                 </div>
                 <div className="flex-1 flex flex-col gap-2 md:gap-4 justify-between">
@@ -346,8 +346,9 @@ export default function App() {
               height: isMinimized ? 'auto' : (isMobile ? '50vh' : chatSize.height) 
             }}
             className={cn(
-              "fixed bg-[#f3f3f3] shadow-[inset_2px_2px_0px_0px_#ffffff,inset_-2px_-2px_0px_0px_#474747] flex flex-col z-[100] overflow-hidden transition-all duration-300",
-              isMinimized && "cursor-default"
+              "fixed bg-[#f3f3f3] shadow-[inset_2px_2px_0px_0px_#ffffff,inset_-2px_-2px_0px_0px_#474747] flex flex-col z-[100] overflow-hidden",
+              isMinimized && "cursor-default",
+              !isDraggingChat && !isResizingChat && "transition-all duration-300"
             )}
           >
             <div 
@@ -453,6 +454,7 @@ export default function App() {
               min={100} 
               max={300} 
               axis="X-Axis"
+              isMobile={isMobile}
               onChange={(v) => updateParam('width', v)} 
             />
             <InspectorSlider 
@@ -462,6 +464,7 @@ export default function App() {
               min={60} 
               max={150} 
               axis="Y-Axis"
+              isMobile={isMobile}
               onChange={(v) => updateParam('depth', v)} 
             />
             <InspectorSlider 
@@ -471,6 +474,7 @@ export default function App() {
               min={50} 
               max={110} 
               axis="Z-Axis"
+              isMobile={isMobile}
               onChange={(v) => updateParam('height', v)} 
             />
             <InspectorSlider 
@@ -480,6 +484,7 @@ export default function App() {
               min={-20} 
               max={20} 
               axis="Tilt"
+              isMobile={isMobile}
               onChange={(v) => updateParam('legTaper', v)} 
             />
             <InspectorSlider 
@@ -489,6 +494,7 @@ export default function App() {
               min={10} 
               max={100} 
               axis="Z-Axis"
+              isMobile={isMobile}
               onChange={(v) => updateParam('topThickness', v)} 
             />
             <InspectorSlider 
@@ -498,6 +504,7 @@ export default function App() {
               min={20} 
               max={150} 
               axis="Y-Depth"
+              isMobile={isMobile}
               onChange={(v) => updateParam('frameDepth', v)} 
             />
             <InspectorSlider 
@@ -507,6 +514,7 @@ export default function App() {
               min={0} 
               max={300} 
               axis="Inset"
+              isMobile={isMobile}
               onChange={(v) => updateParam('frameInwardOffset', v)} 
             />
             <InspectorSlider 
@@ -516,6 +524,7 @@ export default function App() {
               min={20} 
               max={200} 
               axis="Width"
+              isMobile={isMobile}
               onChange={(v) => updateParam('frameThickness', v)} 
             />
             <InspectorSlider 
@@ -525,6 +534,7 @@ export default function App() {
               min={20} 
               max={120} 
               axis="Top"
+              isMobile={isMobile}
               onChange={(v) => updateParam('legTopSize', v)} 
             />
             <InspectorSlider 
@@ -534,6 +544,7 @@ export default function App() {
               min={10} 
               max={100} 
               axis="Bottom"
+              isMobile={isMobile}
               onChange={(v) => updateParam('legBottomSize', v)} 
             />
             <InspectorSlider 
@@ -543,6 +554,7 @@ export default function App() {
               min={0} 
               max={200} 
               axis="Core"
+              isMobile={isMobile}
               onChange={(v) => updateParam('legInnerDepth', v)} 
             />
 
@@ -669,7 +681,7 @@ function MaterialButton({ type, color, active, onClick, isGlass }: { type: strin
   );
 }
 
-function InspectorSlider({ label, unit, value, min, max, axis, onChange }: { label: string; unit: string; value: number; min: number; max: number; axis: string; onChange: (v: number) => void }) {
+function InspectorSlider({ label, unit, value, min, max, axis, isMobile, onChange }: { label: string; unit: string; value: number; min: number; max: number; axis: string; isMobile?: boolean; onChange: (v: number) => void }) {
   const percentage = ((value - min) / (max - min)) * 100;
   const sliderRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -687,26 +699,41 @@ function InspectorSlider({ label, unit, value, min, max, axis, onChange }: { lab
     updateValue(e.clientX);
   };
 
+  const onTouchStart = (e: React.TouchEvent) => {
+    setIsDragging(true);
+    updateValue(e.touches[0].clientX);
+  };
+
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => {
       if (isDragging) {
         updateValue(e.clientX);
       }
     };
+    const onTouchMove = (e: TouchEvent) => {
+      if (isDragging) {
+        updateValue(e.touches[0].clientX);
+      }
+    };
     const onMouseUp = () => setIsDragging(false);
+    const onTouchEnd = () => setIsDragging(false);
 
     if (isDragging) {
       window.addEventListener('mousemove', onMouseMove);
       window.addEventListener('mouseup', onMouseUp);
+      window.addEventListener('touchmove', onTouchMove);
+      window.addEventListener('touchend', onTouchEnd);
     }
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseup', onMouseUp);
+      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('touchend', onTouchEnd);
     };
   }, [isDragging]);
   
   return (
-    <div className="space-y-4">
+    <div className={cn("space-y-4 touch-none", isMobile && "space-y-2")}>
       <div className="flex justify-between items-end">
         <label className="font-mono text-[10px] font-bold text-black">{label}</label>
         <span className="text-[10px] text-gray-400 uppercase">{axis}</span>
@@ -714,6 +741,7 @@ function InspectorSlider({ label, unit, value, min, max, axis, onChange }: { lab
       <div 
         ref={sliderRef}
         onMouseDown={onMouseDown}
+        onTouchStart={onTouchStart}
         className="relative h-4 flex items-center group cursor-pointer"
       >
         <div className="absolute w-full h-[1px] bg-gray-300"></div>
