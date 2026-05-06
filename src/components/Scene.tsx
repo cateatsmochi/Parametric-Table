@@ -1,17 +1,66 @@
 
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Stage, PerspectiveCamera, Environment, Grid, ContactShadows } from '@react-three/drei';
+import { OrbitControls, PerspectiveCamera, Environment, Grid, ContactShadows } from '@react-three/drei';
 import { Table } from './Table';
 import { TableConfig } from '../types';
-import { Suspense } from 'react';
+import { Suspense, useImperativeHandle, forwardRef, useRef } from 'react';
+import * as THREE from 'three';
 
 interface SceneProps {
   config: TableConfig;
 }
 
-export function Scene({ config }: SceneProps) {
+export interface SceneHandle {
+  capture: () => string;
+}
+
+export const Scene = forwardRef<SceneHandle, SceneProps>(({ config }, ref) => {
+  const contextRef = useRef<{ gl: THREE.WebGLRenderer; scene: THREE.Scene; camera: THREE.Camera } | null>(null);
+
+  useImperativeHandle(ref, () => ({
+    capture: () => {
+      if (contextRef.current) {
+        const { gl, scene, camera } = contextRef.current;
+        
+        // 1. Zoom in: move camera closer to the table
+        const originalPos = camera.position.clone();
+        camera.position.multiplyScalar(0.7);
+        camera.lookAt(0, 0.5, 0);
+
+        // 2. Hide GridLine (Grid helper)
+        const grid = scene.getObjectByName('main-grid');
+        const originalGridVisible = grid ? grid.visible : true;
+        if (grid) grid.visible = false;
+
+        // Force a render to ensure the buffer is up to date for the capture
+        gl.render(scene, camera);
+        const data = gl.domElement.toDataURL('image/png');
+
+        // 3. Restore
+        camera.position.copy(originalPos);
+        camera.lookAt(0, 0.5, 0);
+        if (grid) grid.visible = originalGridVisible;
+        gl.render(scene, camera);
+
+        return data;
+      }
+      return '';
+    }
+  }));
+
   return (
-    <Canvas shadows dpr={[1, 2]}>
+    <Canvas 
+      shadows 
+      dpr={[1, 2]} 
+      gl={{ preserveDrawingBuffer: true, antialias: true }}
+      onCreated={(state) => {
+        contextRef.current = {
+          gl: state.gl,
+          scene: state.scene,
+          camera: state.camera
+        };
+      }}
+    >
       <Suspense fallback={null}>
         <PerspectiveCamera makeDefault position={[4, 4, 4]} fov={40} />
         <OrbitControls 
@@ -32,6 +81,7 @@ export function Scene({ config }: SceneProps) {
         />
 
         <Grid 
+          name="main-grid"
           infiniteGrid 
           fadeDistance={20} 
           fadeStrength={5} 
@@ -53,4 +103,4 @@ export function Scene({ config }: SceneProps) {
       </Suspense>
     </Canvas>
   );
-}
+});

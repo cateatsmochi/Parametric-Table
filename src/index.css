@@ -5,3 +5,23 @@
   --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 }
+
+@utility custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 1px !important;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent !important;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #000 !important;
+    border-radius: 0 !important;
+  }
+  &::-webkit-scrollbar-button {
+    display: none !important;
+    height: 0 !important;
+    width: 0 !important;
+  }
+  scrollbar-width: thin;
+  scrollbar-color: #000 transparent;
+}
